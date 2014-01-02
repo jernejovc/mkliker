@@ -13,7 +13,11 @@ import com.jernejovc.mkliker.util.ServerList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -49,8 +53,34 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		@Override
 		public void onClick(View v) {
 			m_connectedserver = m_serverlist.get(getSelectedServerIndex());
-			new ServerConnectAsyncTask(parent, m_button, m_progressbar, m_textview)
-			.execute(m_connectedserver);
+			
+		    
+		    /* If we are not connected to data network or wifi, enable 
+		     * sms mode if it is set in the preferences.
+		     */
+		    if(!m_activity.isDataNetworkAvailable()) {
+		    	if(m_prefs.isSMSEnabled()) {
+		    		if(m_connectedserver.getSMSNumber().equalsIgnoreCase("")) {
+		    			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
+		    			adb.setTitle("SMS not supported");
+		    			adb.setIcon(android.R.drawable.ic_dialog_alert);
+		    			adb.setMessage("SMS is not configured to be used on this server. " + 
+		    			"Please update the server configuration.");
+		    		} else {
+		    			m_activity.setSMSMode(true);
+		    			openSelectRoomFragment();
+		    		}
+		    	} else {
+		    		m_activity.showSMSInfoDialog();
+		    	}
+		    } 
+		    /*
+		     * Else, we have a working data connection, use normal method.
+		     */
+		    else {
+		    	new ServerConnectAsyncTask(parent, m_button, m_progressbar, m_textview)
+		    	.execute(m_connectedserver);
+		    }
 		}
 	}
 

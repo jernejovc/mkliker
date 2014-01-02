@@ -1,7 +1,12 @@
 package com.jernejovc.mkliker;
 
+import java.util.Locale;
+
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +36,11 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		private String answer = "";
 		@Override
 		public void onClick(View v) {
-			sendAnswer(answer);
+			if(m_activity.inSMSMode()) {
+				sendSMSAnswer();
+			} else {
+				sendAnswer(answer);
+			}
 		}
 	}
 
@@ -131,9 +140,12 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 						m_user.getuserID(),
 						m_user.getNickname(), 
 						message);
-
-				m_server.send(msg);
-				sent_message = true;
+				if(m_activity.inSMSMode()) {
+					sendSMSMessage();
+				} else {
+					m_server.send(msg);
+					sent_message = true;
+				}
 			}
 		});	
 
@@ -151,8 +163,21 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 				return false;
 			}
 		});
-		return view;
+		
+		if(m_activity.inSMSMode()) {
+			m_textanswerLayout.setVisibility(View.GONE);
+			m_sendAnswerButton.setVisibility(View.GONE);
+			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
+			adb.setTitle("Participation via SMS");
+			adb.setIcon(android.R.drawable.ic_dialog_alert);
+			adb.setMessage("You are participating by SMS. That means that this screen will not " + 
+			"update and you will have to write your answers (e.g. 'A', 'ADE' and 'answer') and send them " + 
+					"manually when your lecturer starts the question.");
+			adb.show();
+		}
+		return m_view;
 	}
+	
 	@Override
 	public void receiveMessage(Message msg) {
 		String[] payloads = msg.message().split(Message.SEPARATOR);
@@ -282,6 +307,27 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 				m_user.getuserID(),
 				ans);
 		m_server.send(msg);
+	}
+	
+	private void sendSMSMessage() {
+		String text = String.format(Locale.getDefault(), 
+				"%s#MSG#%s", 
+				m_user.getRoom(),
+				m_messageEditText.getText().toString());
+		sendSMS(text);
+		m_messageEditText.setText("");
+	}
+	private void sendSMSAnswer() {
+		String text = String.format(Locale.getDefault(), 
+				"%s#%s", 
+				m_user.getRoom(),
+				m_answerEditText.getText().toString());
+		sendSMS(text);
+	}
+	
+	private void sendSMS(String text) {
+		SmsManager sms = SmsManager.getDefault();
+		sms.sendTextMessage(m_server.getSMSNumber(), null, text, null, null);
 	}
 	
 	public void setMainActivity(MainActivity activity) {

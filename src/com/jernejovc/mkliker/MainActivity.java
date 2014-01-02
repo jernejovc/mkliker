@@ -3,7 +3,10 @@ package com.jernejovc.mkliker;
 import com.jernejovc.mkliker.util.KlikerPreferences;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -131,5 +134,20 @@ public class MainActivity extends FragmentActivity {
 	
 	public boolean inSMSMode() {
 		return m_smsMode;
+	}
+	
+	public boolean isDataNetworkAvailable() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo network = cm.getActiveNetworkInfo();
+	    
+	    return network != null && network.isConnected();
+	}
+	public void showSMSInfoDialog() {
+		AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		adb.setTitle("Enable SMS");
+		adb.setIcon(android.R.drawable.ic_dialog_info);
+		adb.setMessage("You are not connected to a network, however you can " +
+		"enable participation via SMS in the menu (if the server supports SMS participation).");
+		adb.show();
 	}
 }

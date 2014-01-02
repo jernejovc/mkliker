@@ -74,11 +74,22 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 			return;
 		}
 		
-		m_joinRoomButton.setVisibility(View.GONE);
-		m_progressBar.setVisibility(View.VISIBLE);
-		
-		Message toSend = MessageFactory.makeLoginStudentMessage(room, "");
-		m_server.send(toSend);
+		if(!m_activity.isDataNetworkAvailable()) {
+			if(!m_preferences.isSMSEnabled()) {
+				m_activity.showSMSInfoDialog();
+			} else {
+				m_activity.setSMSMode(true);
+				m_user = new User(-1, nickname, room);
+				openRoomFragment(QuestionType.YESNO, false);
+			}
+		} else {
+			m_activity.setSMSMode(false);
+			m_joinRoomButton.setVisibility(View.GONE);
+			m_progressBar.setVisibility(View.VISIBLE);
+
+			Message toSend = MessageFactory.makeLoginStudentMessage(room, "");
+			m_server.send(toSend);
+		}
 	}
 	
 	private void openRoomFragment(QuestionType type, boolean running) {
