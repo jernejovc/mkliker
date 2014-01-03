@@ -152,9 +152,6 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		m_roomTextView.setText(m_user.getRoom());
 		m_nicknameTextView.setText(m_user.getNickname());
 
-		// Enable or disable question
-		questionChanged();
-
 		m_view = view;
 		m_view.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -175,6 +172,10 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 					"manually when your lecturer starts the question.");
 			adb.show();
 		}
+		
+		// Enable or disable question
+		questionChanged();
+		
 		return m_view;
 	}
 	
@@ -328,6 +329,7 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 	private void sendSMS(String text) {
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(m_server.getSMSNumber(), null, text, null, null);
+		m_answerEditText.setText("");
 	}
 	
 	public void setMainActivity(MainActivity activity) {

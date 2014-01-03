@@ -3,8 +3,6 @@ import java.util.ArrayList;
 
 import com.jernejovc.mkliker.net.Server;
 
-
-
 public class ServerList {
 	private ArrayList<Server> m_servers;
 	
@@ -88,7 +86,7 @@ public class ServerList {
 			return false;
 		for(String server: servers) {
 			String[] srvr = server.split(",");
-			if(srvr.length != 3 || srvr.length != 4)
+			if(!(srvr.length == 3 || srvr.length == 4))
 				return false;
 		}
 		return true;

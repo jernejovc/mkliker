@@ -80,7 +80,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 			} else {
 				m_activity.setSMSMode(true);
 				m_user = new User(-1, nickname, room);
-				openRoomFragment(QuestionType.YESNO, false);
+				openRoomFragment(QuestionType.SHORTANSWER, true);
 			}
 		} else {
 			m_activity.setSMSMode(false);

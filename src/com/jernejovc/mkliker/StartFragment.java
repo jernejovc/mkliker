@@ -47,43 +47,6 @@ public class StartFragment extends Fragment implements WaitForConnection {
 	private Button m_button;
 	private TextView m_textview;
 	
-	private class ConnectClickListener implements View.OnClickListener {
-		private StartFragment parent = StartFragment.this;
-		
-		@Override
-		public void onClick(View v) {
-			m_connectedserver = m_serverlist.get(getSelectedServerIndex());
-			
-		    
-		    /* If we are not connected to data network or wifi, enable 
-		     * sms mode if it is set in the preferences.
-		     */
-		    if(!m_activity.isDataNetworkAvailable()) {
-		    	if(m_prefs.isSMSEnabled()) {
-		    		if(m_connectedserver.getSMSNumber().equalsIgnoreCase("")) {
-		    			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
-		    			adb.setTitle("SMS not supported");
-		    			adb.setIcon(android.R.drawable.ic_dialog_alert);
-		    			adb.setMessage("SMS is not configured to be used on this server. " + 
-		    			"Please update the server configuration.");
-		    		} else {
-		    			m_activity.setSMSMode(true);
-		    			openSelectRoomFragment();
-		    		}
-		    	} else {
-		    		m_activity.showSMSInfoDialog();
-		    	}
-		    } 
-		    /*
-		     * Else, we have a working data connection, use normal method.
-		     */
-		    else {
-		    	new ServerConnectAsyncTask(parent, m_button, m_progressbar, m_textview)
-		    	.execute(m_connectedserver);
-		    }
-		}
-	}
-
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -106,17 +69,39 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		// Load servers into spinner
 		loadServerListSpinner();
 		
-		ConnectClickListener connect_listener = new ConnectClickListener();
-		connect_listener.parent = this;
 		m_button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				m_connectedserver = m_serverlist.get(getSelectedServerIndex());
 				m_connectedserver.setHandler(m_wshandler);
 				m_wshandler.setConnectionWaiter(StartFragment.this);
-				ProgressBar bar = (ProgressBar) getView().findViewById(R.id.connectingProgressBar);
-				TextView tv = (TextView) getView().findViewById(R.id.connectErrorTextView);
-				new ServerConnectAsyncTask(StartFragment.this, m_button, bar, tv).execute(m_connectedserver);
+				/* If we are not connected to data network or wifi, enable 
+			     * sms mode if it is set in the preferences.
+			     */
+			    if(!m_activity.isDataNetworkAvailable()) {
+			    	if(m_prefs.isSMSEnabled()) {
+			    		if(m_connectedserver.getSMSNumber().equalsIgnoreCase("")) {
+			    			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
+			    			adb.setTitle("SMS not supported");
+			    			adb.setIcon(android.R.drawable.ic_dialog_alert);
+			    			adb.setMessage("SMS is not configured to be used on this server. " + 
+			    			"Please update the server configuration.");
+			    		} else {
+			    			m_activity.setSMSMode(true);
+			    			openSelectRoomFragment();
+			    		}
+			    	} else {
+			    		m_activity.showSMSInfoDialog();
+			    	}
+			    } 
+			    /*
+			     * Else, we have a working data connection, use normal method.
+			     */
+			    else {
+					ProgressBar bar = (ProgressBar) getView().findViewById(R.id.connectingProgressBar);
+					TextView tv = (TextView) getView().findViewById(R.id.connectErrorTextView);
+					new ServerConnectAsyncTask(StartFragment.this, m_button, bar, tv).execute(m_connectedserver);
+			    }
 			}
 		});
 		
@@ -232,6 +217,7 @@ public class StartFragment extends Fragment implements WaitForConnection {
 					public void onClick(View v) {
 						Toast.makeText(v.getContext(), "editing server...", Toast.LENGTH_SHORT).show();
 						s.setUrl(urlEditText.getText().toString());
+						s.setSMSNumber(smsEditText.getText().toString());
 						if(defaultCheckBox.isChecked()) {
 							s.setIsDefault(true);
 							m_serverlist.setDefault(s);

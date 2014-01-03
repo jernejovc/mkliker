@@ -41,6 +41,8 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		boolean smsEnabled = new KlikerPreferences(this).isSMSEnabled();
+		menu.findItem(R.id.action_menu_enable_sms).setChecked(smsEnabled);
 		return true;
 	}
 	
@@ -49,6 +51,7 @@ public class MainActivity extends FragmentActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.action_menu_enable_sms:
+	        	item.setChecked(!item.isChecked());
 	        	new KlikerPreferences(this).setSMSEnabled(item.isChecked());
 	            return true;
 	        default:
