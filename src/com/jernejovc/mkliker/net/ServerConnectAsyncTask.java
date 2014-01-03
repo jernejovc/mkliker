@@ -6,42 +6,35 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
+/**
+ * Asynchronous task that connects to the server and notifies the parent fragment
+ * when connecting to the server is finished.
+ * @author matej
+ *
+ */
 public class ServerConnectAsyncTask extends AsyncTask<Server, Integer, Boolean> {
 	private StartFragment m_parent;
 	private Button m_button;
 	private ProgressBar m_progressbar;
-	private TextView m_textview;
-	public ServerConnectAsyncTask(StartFragment parent, Button button, ProgressBar bar, TextView tv) {
+
+	/**
+	 * 
+	 * @param parent {@link StartFragment} which will later be notified when connecting 
+	 * is done
+	 * @param button Connect button in the form 
+	 * @param bar Loading bar in the form
+	 */
+	public ServerConnectAsyncTask(StartFragment parent, Button button, ProgressBar bar) {
 		super();
 		m_parent = parent;
 		m_button = button;
 		m_progressbar = bar;
-		m_textview = tv;
-		
+
 		m_button.setVisibility(View.GONE);
 		m_progressbar.setVisibility(View.VISIBLE);
 	}
 	protected Boolean doInBackground(Server... server) {
-		/*int sleep_time = 50;
-		int max_sleep = 5000;
-		int sleep = 0;
-		if(server[0].connect()) {
-			while(!server[0].getConnection().isConnected()) {
-				try {
-					Thread.sleep(sleep_time);
-					sleep += sleep_time;
-					if(sleep >= max_sleep) {
-						return false;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			return true;
-		}
-		return false;*/
 		return server[0].connect();
 	}
 

@@ -3,14 +3,11 @@ package com.jernejovc.mkliker;
 import java.util.Locale;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.SmsManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,8 +23,20 @@ import com.jernejovc.mkliker.net.User;
 import com.jernejovc.mkliker.question.QuestionType;
 import com.jernejovc.mkliker.question.QuestionTypeUtil;
 
+/**
+ * This class represents the Room, into which a user is connected, either
+ * by classic WebSocket connection or SMS participation.
+ * @author matej
+ *
+ */
 public class RoomFragment extends Fragment implements ReceiveMessage {
 	
+	/**
+	 * Button listener which sends whatever answer it was given in the
+	 * constructor, when clicked.
+	 * @author matej
+	 *
+	 */
 	private class AnswerButtonListener implements View.OnClickListener {
 		public AnswerButtonListener(String answer) {
 			super();
@@ -54,29 +63,33 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 	private TextView m_roomTextView;
 	private TextView m_roomStatusTextView;
 
+	// Answer laayouts shown one-by-one depending on the question
 	private LinearLayout m_yesnoLayout;
 	private LinearLayout m_abcdeSingleLayout;
 	private LinearLayout m_abcdeMultiLayout;
 	private LinearLayout m_textanswerLayout;
 
+	// Yes / No / Don't know
 	private Button m_answerYesButton;
 	private Button m_answerNoButton;
 	private Button m_answerDontKnowButton;
 
+	// A / B / C / D / E single answer buttons
 	private Button m_answerAButton;
 	private Button m_answerBButton;
 	private Button m_answerCButton;
 	private Button m_answerDButton;
 	private Button m_answerEButton;
-
+	
+	// A / B / C / D / E multi answer checkboxes
 	private CheckBox m_answerACheckBox;
 	private CheckBox m_answerBCheckBox;
 	private CheckBox m_answerCCheckBox;
 	private CheckBox m_answerDCheckBox;
 	private CheckBox m_answerECheckBox;
 
+	// Arbitrary answer edit text and button which sends answer
 	private EditText m_answerEditText;
-
 	private Button m_sendAnswerButton;
 
 	boolean sent_message = false;
@@ -88,7 +101,8 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.room_layout, container, false);
-
+		
+		// Initialize values and set listeners
 		m_sendButton = (Button) view.findViewById(R.id.roomSendMessageButton);
 		m_messageEditText = (EditText) view.findViewById(R.id.roomMessageEditText);
 		m_roomTextView = (TextView) view.findViewById(R.id.roomRoomTextView);
@@ -130,6 +144,7 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		m_sendAnswerButton = (Button) view.findViewById(R.id.roomSendAnswerButton);
 		m_sendAnswerButton.setOnClickListener(new AnswerButtonListener(""));
 
+		// Send Message to lecturer button listener
 		m_sendButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -153,13 +168,6 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		m_nicknameTextView.setText(m_user.getNickname());
 
 		m_view = view;
-		m_view.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				System.out.println(keyCode);
-				return false;
-			}
-		});
 		
 		if(m_activity.inSMSMode()) {
 			m_textanswerLayout.setVisibility(View.GONE);
@@ -170,6 +178,7 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 			adb.setMessage("You are participating by SMS. That means that this screen will not " + 
 			"update and you will have to write your answers (e.g. 'A', 'ADE' and 'answer') and send them " + 
 					"manually when your lecturer starts the question.");
+			adb.setPositiveButton("OK", null);
 			adb.show();
 		}
 		
@@ -185,9 +194,11 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		QuestionType type;
 		switch(msg.messageType()) {
 		case ACKNOWGLEDGE:
+			// If we've sent message, ACK confirms its delivery, so we clear edittext
 			if(sent_message) {
 				m_messageEditText.setText("");
 				m_messageEditText.clearFocus();
+				sent_message = false;
 			}
 			break;
 		case ROOMSTATUS:
@@ -196,18 +207,21 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 			}
 			break;
 		case STARTQUESTION:
+			// Set question type and mark question as running
 			type = QuestionTypeUtil.stringToQuestionType(payloads[0]);
 			setQuestionType(type);
 			setRunning(true);
 			questionChanged();
 			break;
 		case STOPQUESTION:
+			// Disable question
 			type = QuestionTypeUtil.stringToQuestionType(payloads[0]);
 			setQuestionType(type);
 			setRunning(false);
 			questionChanged();
 			break;
 		case BLOCK:
+			// Disable question
 			setRunning(false);
 			questionChanged();
 		default:
@@ -215,18 +229,37 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		}
 
 	}
+	
+	/**
+	 * Set the server to which we are connected 
+	 * @param server
+	 */
 	public void setServer(Server server) {
 		m_server = server;
 		m_server.setReceiver(this);
 	}
 
+	/**
+	 * Sets the user data
+	 * @param user User data
+	 */
 	public void setUser(User user) {
 		m_user = user;
 	}
+	
+	/**
+	 * What kind of QuestionType is currently running
+	 * @param type
+	 */
 	public void setQuestionType(QuestionType type) {
 		m_questionType = type;
 
 	}
+	
+	/**
+	 * Set whether or not the question is running 
+	 * @param running
+	 */
 	public void setRunning(boolean running) {
 		m_questionRunning = running;
 
@@ -235,9 +268,12 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 			questionChanged();
 	}
 
+	/**
+	 * Update GUI based on question type and question running status
+	 */
 	private void questionChanged() {
 		if(m_questionRunning) {
-			// show question based on question type
+			// show question layouts based on question type, also show some informative text
 			switch(m_questionType) {
 			case YESNO:
 				m_roomStatusTextView.setText("Tap Yes, No or Don't know.");
@@ -259,26 +295,26 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 				break;
 			}
 		} else {
+			// Hide all layouts
 			m_roomStatusTextView.setText("No question running.");
-			switch(m_questionType) {
-			case YESNO:
-				m_yesnoLayout.setVisibility(View.GONE);
-				break;
-			case ABCDESINGLE:
-				m_abcdeSingleLayout.setVisibility(View.GONE);
-				break;
-			case ABCDEMULTI:
-				m_abcdeMultiLayout.setVisibility(View.GONE);
-				m_sendAnswerButton.setVisibility(View.GONE);
-				break;
-			case SHORTANSWER:
-				m_textanswerLayout.setVisibility(View.GONE);
-				m_sendAnswerButton.setVisibility(View.GONE);
-				break;
-			}
+
+			m_yesnoLayout.setVisibility(View.GONE);
+
+			m_abcdeSingleLayout.setVisibility(View.GONE);
+
+			m_abcdeMultiLayout.setVisibility(View.GONE);
+			m_sendAnswerButton.setVisibility(View.GONE);
+
+			m_textanswerLayout.setVisibility(View.GONE);
+			m_sendAnswerButton.setVisibility(View.GONE);
 		}
 	}
 
+	/**
+	 * Sends the answer to the server.
+	 * @param answer Answer to be sent, only valid if question type is YES/NO or 
+	 * ABCDE single, in other cases the answer is constructed.
+	 */
 	private void sendAnswer(String answer) {
 		String ans = answer;
 		switch(m_questionType) {
@@ -310,6 +346,9 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		m_server.send(msg);
 	}
 	
+	/**
+	 * Sends an SMS message to the lecturer
+	 */
 	private void sendSMSMessage() {
 		String text = String.format(Locale.getDefault(), 
 				"%s#MSG#%s", 
@@ -318,6 +357,10 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		sendSMS(text);
 		m_messageEditText.setText("");
 	}
+	
+	/**
+	 * Sends an SMS answer to the lecturer
+	 */
 	private void sendSMSAnswer() {
 		String text = String.format(Locale.getDefault(), 
 				"%s#%s", 
@@ -326,12 +369,20 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		sendSMS(text);
 	}
 	
+	/**
+	 * Sends an arbitrary SMS text to the server 
+	 * @param text
+	 */
 	private void sendSMS(String text) {
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(m_server.getSMSNumber(), null, text, null, null);
 		m_answerEditText.setText("");
 	}
 	
+	/**
+	 * Sets parent main activity
+	 * @param activity
+	 */
 	public void setMainActivity(MainActivity activity) {
 		m_activity = activity;
 	}

@@ -3,6 +3,11 @@ import java.util.ArrayList;
 
 import com.jernejovc.mkliker.net.Server;
 
+/**
+ * Utility class that holds a number of servers.
+ * @author matej
+ *
+ */
 public class ServerList {
 	private ArrayList<Server> m_servers;
 	
@@ -10,14 +15,28 @@ public class ServerList {
 		m_servers = new ArrayList<Server>();
 	}
 	
+	/**
+	 * Adds a server to the server list.
+	 * @param p_server
+	 */
 	public void add(Server p_server) {
 		m_servers.add(p_server);
 	}
 	
+	/**
+	 * Returns the server at a specified index.
+	 * @param idx
+	 * @return
+	 */
 	public Server get(int idx) {
 		return m_servers.get(idx);
 	}
 	
+	/**
+	 * Sets the server at a specified index.
+	 * @param s Server to be set
+	 * @param idx Index
+	 */
 	public void set(Server s, int idx) {
 		m_servers.set(idx, s);
 	}
@@ -42,10 +61,18 @@ public class ServerList {
 		return toReturn;
 	}
 	
+	/**
+	 * @return true if the server list is empty, false otherwise
+	 */
 	public boolean isEmpty() {
 		return m_servers.isEmpty();
 	}
 	
+	/**
+	 * Returns ServerList converted from SharedPreferences value
+	 * @param value SharedPreferences String value
+	 * @return
+	 */
 	public static ServerList fromSharedPrefsValue(String value) {
 		ServerList list = new ServerList();
 		
@@ -62,12 +89,19 @@ public class ServerList {
 		return list;
 	}
 
+	/**
+	 * @return Default server list, currently with only one server, FRI
+	 */
 	public static ServerList getDefaultServerList() {
 		ServerList l = new ServerList();
 		l.add(new Server("FRI", "lgm.fri.uni-lj.si", "041239923", true));
 		return l;
 	}
 	
+	/**
+	 * Converts the server list to a SharedPreferences value
+	 * @return SharedPreferences value
+	 */
 	public String toSharedPrefsValue() {
 		StringBuilder builder = new StringBuilder();
 		for(Server s : m_servers) {
@@ -80,6 +114,11 @@ public class ServerList {
 		return builder.toString();
 	}
 
+	/**
+	 * Checks if the string is a valid SharedPreferences value
+	 * @param value Value to be checked
+	 * @return true if the value is valid, false otherwise
+	 */
 	public static boolean isValidSharedPreference(String value) {
 		String[] servers = value.split(";");
 		if(servers.length == 0)
@@ -92,6 +131,10 @@ public class ServerList {
 		return true;
 	}
 
+	/**
+	 * Sets the default server in the server list
+	 * @param s Server to be set as default
+	 */
 	public void setDefault(Server s) {
 		for(Server server : m_servers) {
 			if(server.getName().equalsIgnoreCase(s.getName())) {
@@ -102,6 +145,10 @@ public class ServerList {
 		}
 	}
 
+	/**
+	 * Removes the server from the ServerList 
+	 * @param s
+	 */
 	public void remove(Server s) {
 		m_servers.remove(s);
 	}

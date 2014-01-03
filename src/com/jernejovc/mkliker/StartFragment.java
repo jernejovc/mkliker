@@ -13,14 +13,9 @@ import com.jernejovc.mkliker.util.ServerList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +39,7 @@ public class StartFragment extends Fragment implements WaitForConnection {
 	
 	private KlikerWebSocketHandler m_wshandler = new KlikerWebSocketHandler();
 	private ProgressBar m_progressbar;
-	private Button m_button;
+	private Button m_connectButton;
 	private TextView m_textview;
 	
 	@Override
@@ -53,7 +48,7 @@ public class StartFragment extends Fragment implements WaitForConnection {
       m_view = inflater.inflate(R.layout.start_fragment, container, false);
       
       m_progressbar = (ProgressBar) m_view.findViewById(R.id.connectingProgressBar);
-      m_button = (Button) m_view.findViewById(R.id.connectButton);
+      m_connectButton = (Button) m_view.findViewById(R.id.connectButton);
       m_textview = (TextView) m_view.findViewById(R.id.connectErrorTextView);
       m_prefs = new KlikerPreferences(getActivity());
 		// Initialize mKliker database
@@ -69,16 +64,16 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		// Load servers into spinner
 		loadServerListSpinner();
 		
-		m_button.setOnClickListener(new View.OnClickListener() {
+		m_connectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				m_connectedserver = m_serverlist.get(getSelectedServerIndex());
 				m_connectedserver.setHandler(m_wshandler);
 				m_wshandler.setConnectionWaiter(StartFragment.this);
-				/* If we are not connected to data network or wifi, enable 
-			     * sms mode if it is set in the preferences.
-			     */
 			    if(!m_activity.isDataNetworkAvailable()) {
+			    	/* If we are not connected to data network or wifi, enable 
+				     * sms mode if it is set in the preferences.
+				     */
 			    	if(m_prefs.isSMSEnabled()) {
 			    		if(m_connectedserver.getSMSNumber().equalsIgnoreCase("")) {
 			    			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
@@ -93,28 +88,28 @@ public class StartFragment extends Fragment implements WaitForConnection {
 			    	} else {
 			    		m_activity.showSMSInfoDialog();
 			    	}
-			    } 
-			    /*
-			     * Else, we have a working data connection, use normal method.
-			     */
-			    else {
+			    } else {
+			    	// Else we have a working data connection, use normal method.
+				     
 					ProgressBar bar = (ProgressBar) getView().findViewById(R.id.connectingProgressBar);
-					TextView tv = (TextView) getView().findViewById(R.id.connectErrorTextView);
-					new ServerConnectAsyncTask(StartFragment.this, m_button, bar, tv).execute(m_connectedserver);
+					new ServerConnectAsyncTask(StartFragment.this, m_connectButton, bar).execute(m_connectedserver);
 			    }
 			}
 		});
 		
 		ImageButton addButton = (ImageButton) m_view.findViewById(R.id.addServerButton);
+		// Add server listener
 		addButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				// Create an Add Server Dialog
 				final Dialog dialog = new Dialog(v.getContext());
 				dialog.setContentView(R.layout.dialog_add_server);
 				dialog.setTitle("Add server");
 				Button okButton = (Button) dialog.findViewById(R.id.addServerDialogOKButton);
 				Button cancelButton = (Button) dialog.findViewById(R.id.addServerDialogCancelButton);
+				
 				class AddServerListener implements View.OnClickListener {
 					ServerList m_serverlist;
 					KlikerPreferences m_prefs;
@@ -125,9 +120,14 @@ public class StartFragment extends Fragment implements WaitForConnection {
 						m_prefs = prefs;
 						m_parent = parent;
 					}
+					
+					/* When clicked, create a new server with specified parameters, and
+					 * add it to the server list, if it doesn't exist.
+					 * (non-Javadoc)
+					 * @see android.view.View.OnClickListener#onClick(android.view.View)
+					 */
 					@Override
 					public void onClick(View v) {
-						// TODO add server to DB
 						Toast.makeText(v.getContext(), "adding server to settings...", Toast.LENGTH_SHORT).show();
 						final EditText nameEditText = (EditText) dialog.findViewById(R.id.addServerDialogNameEditText);
 						final EditText urlEditText = (EditText) dialog.findViewById(R.id.addServerDialogURLEditText);
@@ -189,6 +189,12 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		ImageButton editButton = (ImageButton) m_view.findViewById(R.id.editServerButton);
 		editButton.setOnClickListener(new View.OnClickListener() {
 			
+			/* 
+			 * On edit, populate dialog with server data. Then choose server data
+			 * if needed.
+			 * (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				final Dialog dialog = new Dialog(v.getContext());
@@ -222,7 +228,9 @@ public class StartFragment extends Fragment implements WaitForConnection {
 							s.setIsDefault(true);
 							m_serverlist.setDefault(s);
 						}
+						// Save in the ServerList
 						m_serverlist.set(s, idx);
+						// Save in the preferences
 						m_prefs.saveServerList(m_serverlist);
 						dialog.dismiss();
 					}
@@ -258,6 +266,9 @@ public class StartFragment extends Fragment implements WaitForConnection {
       return m_view;
     }
     
+	/**
+	 * Loads server list Spinner from ServerList values
+	 */
     private void loadServerListSpinner() {
 		m_serverlist = m_prefs.getServerList();
 		
@@ -276,19 +287,18 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		serverListSpinner.setAdapter(adapter);
 	}
     
+    /**
+     * @return The index of selected item in server list Spinner
+     */
     private int getSelectedServerIndex() {
 		Spinner server_spinner = (Spinner) m_view.findViewById(R.id.serverListSpinner);
 		int idx = server_spinner.getSelectedItemPosition();
 		return idx;
 	}
-    
-    
-	
-	public void connectionSuccessful() {
-		
-	}
 
-
+    /**
+     * Opens select room fragment and sets all the variables neccesary
+     */
 	private void openSelectRoomFragment() {
 		SelectRoomFragment fragment = new SelectRoomFragment();
 		// set fragment variables
@@ -300,20 +310,29 @@ public class StartFragment extends Fragment implements WaitForConnection {
 		
 		}
 
+	/**
+	 * Interface override when connecting to server is completed (and thus successful
+	 * or unsuccessful).
+	 */
 	@Override
 	public void connectionEstablished() {
 		System.out.println(m_connectedserver.getConnection().isConnected());
 		m_progressbar.setVisibility(View.GONE);
-		m_button.setVisibility(View.VISIBLE);
+		m_connectButton.setVisibility(View.VISIBLE);
 		if(!m_connectedserver.getConnection().isConnected()) {
 			m_textview.setVisibility(View.VISIBLE);
 			m_textview.setText("Error connecting to server.");
 		} else {
 			Toast.makeText(getActivity().getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
+			m_textview.setVisibility(View.GONE);
 			openSelectRoomFragment();	
 		}	
 	}
 	
+	/**
+	 * Sets parent Main Activity.
+	 * @param activity
+	 */
 	public void setMainActivity(MainActivity activity) {
 		m_activity = activity;
 	}

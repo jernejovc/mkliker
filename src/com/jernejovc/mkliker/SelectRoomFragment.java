@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 
 public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 	private MainActivity m_activity;
@@ -34,10 +33,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// Defines the xml file for the fragment
 		View view = inflater.inflate(R.layout.select_room_layout, container, false);
-		// Setup handles to view objects here
-		// etFoo = (EditText) v.findViewById(R.id.etFoo);
 		
 		m_joinRoomButton = (Button) view.findViewById(R.id.selectRoomJoinButton);
 		m_roomEditText = (EditText) view.findViewById(R.id.selectRoomRoomEditText);
@@ -57,7 +53,11 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		return view;
 	}
 	
+	/**
+	 * Connects to server
+	 */
 	private void connectToServer() {
+		// Sanity checks
 		String room = m_roomEditText.getText().toString();
 		if(room == "") {
 			Toast.makeText(getActivity(),
@@ -75,6 +75,9 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		}
 		
 		if(!m_activity.isDataNetworkAvailable()) {
+			/* If we don't have data network, check if SMS is enabled and use that,
+			 * if it is not enabled remind user that it can be enabled.
+			 */
 			if(!m_preferences.isSMSEnabled()) {
 				m_activity.showSMSInfoDialog();
 			} else {
@@ -83,6 +86,8 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 				openRoomFragment(QuestionType.SHORTANSWER, true);
 			}
 		} else {
+			/* Else just try to join the room
+			 */
 			m_activity.setSMSMode(false);
 			m_joinRoomButton.setVisibility(View.GONE);
 			m_progressBar.setVisibility(View.VISIBLE);
@@ -92,6 +97,12 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		}
 	}
 	
+	/**
+	 * Opens the room fragment with certain QuestionType and running 
+	 * question indicator.
+	 * @param type
+	 * @param running
+	 */
 	private void openRoomFragment(QuestionType type, boolean running) {
 		RoomFragment fragment = new RoomFragment();
 		// set fragment variables
@@ -113,6 +124,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 	public void receiveMessage(Message msg) {
 		switch(msg.messageType()) {
 			case ENROLLED:
+				// Successful connection, save variables and load room fragment 
 				String[] payloads = msg.message().split(Message.SEPARATOR);
 				int uid = Integer.valueOf(payloads[0]);
 				QuestionType question_type = QuestionTypeUtil.stringToQuestionType(payloads[3]);
@@ -122,6 +134,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 				openRoomFragment(question_type, question_running);
 				break;
 			case NOSUCHROOM:
+				// No such room exists
 				Toast.makeText(getActivity(), "This room doesn't exist!", Toast.LENGTH_LONG).show();
 				m_roomEditText.requestFocus();
 				m_progressBar.setVisibility(View.GONE);
@@ -132,19 +145,34 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		}
 	}
 	
+	/**
+	 * Set the server to which we are connected
+	 * @param server
+	 */
 	public void setServer(Server server) {
 		m_server = server;
 		m_server.setReceiver(this);
 	}
 	
+	/**
+	 * Sets the preferences class
+	 * @param prefs
+	 */
 	public void setKlikerPreferences(KlikerPreferences prefs) {
 		m_preferences = prefs;
 	}
 	
+	/**
+	 * @return the server we are connected to
+	 */
 	public Server getServer() {
 		return m_server;
 	}
 	
+	/**
+	 * Sets parent main activity
+	 * @param activity
+	 */
 	public void setMainActivity(MainActivity activity) {
 		m_activity = activity;
 	}

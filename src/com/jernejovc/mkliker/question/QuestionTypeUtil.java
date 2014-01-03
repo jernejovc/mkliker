@@ -2,7 +2,19 @@ package com.jernejovc.mkliker.question;
 
 import java.util.HashMap;
 
+/**
+ * Utility class used for converting QuestionType to String and
+ * vice-versa 
+ * @author matej
+ *
+ */
 public class QuestionTypeUtil {
+	
+	/**
+	 * Converts QuestionType to String
+	 * @param type
+	 * @return
+	 */
 	public static Integer questionTypeToString(QuestionType type) {
 		return getHashMapQTS().get(type);
 	}
@@ -16,6 +28,11 @@ public class QuestionTypeUtil {
 		return map;
 	}
 	
+	/**
+	 * Converts String number to QuestionType 
+	 * @param type 
+	 * @return
+	 */
 	public static QuestionType stringToQuestionType(String type) {
 		return getHashMapSTQ().get(Integer.valueOf(type));
 	}

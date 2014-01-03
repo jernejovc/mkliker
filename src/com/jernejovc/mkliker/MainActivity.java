@@ -15,13 +15,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
+/**
+ * Main Activity which is started when the app is ran.
+ * @author matej
+ *
+ */
 public class MainActivity extends FragmentActivity {
 	private StartFragment m_startFragment;
 	private SelectRoomFragment m_selectRoomFragment;
 	private RoomFragment m_roomFragment;
 	private boolean m_smsMode;
 	
+	/**
+	 * When the Activity is created, {@link StartFragment} is loaded
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		m_startFragment = new StartFragment();
@@ -37,9 +44,9 @@ public class MainActivity extends FragmentActivity {
 		// Commit the transaction
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		boolean smsEnabled = new KlikerPreferences(this).isSMSEnabled();
 		menu.findItem(R.id.action_menu_enable_sms).setChecked(smsEnabled);
@@ -59,6 +66,12 @@ public class MainActivity extends FragmentActivity {
 	    }
 	}
 	
+	/**
+	 * Handle back presses. When there is only StartFragment loaded, exit
+	 * immediately. In both other cases (SelectRoomFragment, RoomFragment)
+	 * user is asked if he'd really like to disconnect from server / leave
+	 * room. 
+	 */
 	@Override
 	public void onBackPressed() {
 		// RoomFragment
@@ -105,23 +118,41 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 	
+	/**
+	 * Sets the {@link SelectRoomFragment} that is used throughout the whole app life
+	 * @param fragment
+	 */
 	public void setSelectRoomFragment(SelectRoomFragment fragment) {
 		m_selectRoomFragment = fragment;
 	}
 	
+	/**
+	 * Sets the {@link RoomFragment} that is used throughout the whole app life
+	 * @param fragment
+	 */
 	public void setRoomFragment(RoomFragment fragment) {
 		m_roomFragment = fragment;
 	}
 	
+	/**
+	 * Opens select room fragment
+	 */
 	public void openSelectRoomFragment() {
 		openFragment(m_selectRoomFragment);
 	}
 	
+	/**
+	 * Opens room fragment
+	 */
 	public void openRoomFragment() {
 		openFragment(m_roomFragment);
 	}
 	
-	public void openFragment(Fragment fragment) {
+	/**
+	 * Opens arbitrary fragment and adds it to the back stack.
+	 * @param fragment
+	 */
+	private void openFragment(Fragment fragment) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		
 		transaction.replace(R.id.fragment_container, fragment);
@@ -131,26 +162,42 @@ public class MainActivity extends FragmentActivity {
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 	}
 	
+	/**
+	 * Sets app into SMS mode, where SMS communication is preffered over
+	 * data (WebSocket) connection.
+	 * @param smsMode
+	 */
 	public void setSMSMode(boolean smsMode) {
 		m_smsMode = smsMode;
 	}
 	
+	/**
+	 * @return true if app is in SMS mode, false otherwise
+	 */
 	public boolean inSMSMode() {
 		return m_smsMode;
 	}
 	
+	/**
+	 * @return true if Data Network is available, false otherwise
+	 */
 	public boolean isDataNetworkAvailable() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo network = cm.getActiveNetworkInfo();
 	    
 	    return network != null && network.isConnected();
 	}
+	
+	/**
+	 * Shows info about SMS usage in the app.
+	 */
 	public void showSMSInfoDialog() {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle("Enable SMS");
 		adb.setIcon(android.R.drawable.ic_dialog_info);
 		adb.setMessage("You are not connected to a network, however you can " +
 		"enable participation via SMS in the menu (if the server supports SMS participation).");
+		adb.setPositiveButton("OK", null);
 		adb.show();
 	}
 }

@@ -2,7 +2,18 @@ package com.jernejovc.mkliker.message;
 
 import java.util.HashMap;
 
+/**
+ * Utility class for converting MessageType to String
+ * and vice-versa
+ * @author matej
+ *
+ */
 public class MessageTypeUtil {
+	/**
+	 * Converts MessageType enum to String
+	 * @param type MessageType to be converted
+	 * @return String corresponding to that Message type or null if it doesn't exist
+	 */
 	public static String messageTypeToString(MessageType type) {
 		return getHashMapMTS().get(type);
 	}
@@ -24,6 +35,11 @@ public class MessageTypeUtil {
 		return map;
 	}
 	
+	/**
+	 * Converts String to MessageType enum value
+	 * @param type String to be converted
+	 * @return MessageType corresponding to that String or null if it doesn't exist
+	 */
 	public static MessageType stringToMessageType(String str) {
 		return getHashMapSTM().get(str);
 	}

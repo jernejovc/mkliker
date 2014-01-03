@@ -6,6 +6,12 @@ import com.jernejovc.mkliker.message.MessageFactory;
 
 import de.tavendo.autobahn.WebSocketHandler;
 
+/**
+ * WebSocket handler class. Used for receiving messages through WebSocket protocol
+ * and relaying those messages to fragments.
+ * @author matej
+ *
+ */
 public class KlikerWebSocketHandler extends WebSocketHandler {
 	ReceiveMessage m_receiver;
 	WaitForConnection m_waitforconnection;
@@ -14,6 +20,11 @@ public class KlikerWebSocketHandler extends WebSocketHandler {
 		super();
 	}
 	
+	/**
+	 *  
+	 * @param conn Fragment (or a class that implements interface) that 
+	 * is waiting for connection to be established through WebSocket protocol.
+	 */
 	public KlikerWebSocketHandler(WaitForConnection conn) {
 		super();
 		m_waitforconnection = conn;  
@@ -43,10 +54,18 @@ public class KlikerWebSocketHandler extends WebSocketHandler {
 		m_receiver.receiveMessage(MessageFactory.fromWSString(payload));
 	}
 	
+	/**
+	 * Sets the receiver Fragment to which all the messages are relayed to.
+	 * @param receiver Receiver object
+	 */
 	public void setReceiver(ReceiveMessage receiver) {
 		m_receiver = receiver;
 	}
 	
+	/**
+	 * See {@link #KlikerWebSocketHandler(WaitForConnection)}
+	 * @param waiter
+	 */
 	public void setConnectionWaiter(WaitForConnection waiter) {
 		m_waitforconnection = waiter;
 	}

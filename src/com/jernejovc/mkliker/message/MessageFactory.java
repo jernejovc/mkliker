@@ -2,9 +2,19 @@ package com.jernejovc.mkliker.message;
 
 import java.util.Locale;
 
-
+/**
+ * Utility class for creating messages from String values.
+ * @author matej
+ *
+ */
 public class MessageFactory {
 	
+	/**
+	 * Creates a LoginStudent message
+	 * @param room Room to which the student is logging in
+	 * @param pass Password of the room
+	 * @return String containing the message
+	 */
 	public static Message makeLoginStudentMessage(String room, String pass) {
 		String payload = String.format(Locale.getDefault(),
 				"%s%s%s", 
@@ -14,6 +24,13 @@ public class MessageFactory {
 		return new Message(MessageType.LOGINSTUDENT, payload);
 	}
 	
+	/**
+	 * Creates a StudentAnswer message
+	 * @param room Room to which the answer is being sent to
+	 * @param userID User's ID
+	 * @param answer Answer to be sent
+	 * @return String containing the message
+	 */
 	public static Message makeStudentAnswerMessage(String room, int userID, String answer) {
 		String payload = String.format(Locale.getDefault(),
 				"%s%s%d%s%s", 
@@ -26,6 +43,14 @@ public class MessageFactory {
 		return new Message(MessageType.STUDENTANSWER, payload);
 	}
 	
+	/**
+	 * Creates a message to the lecturer type Message
+	 * @param room Room to which the message is being sent to
+	 * @param userID User's ID
+	 * @param nickname Nickname of the user
+	 * @param message Message to be send
+	 * @return String containing the message
+	 */
 	public static Message makeMessageMessage(String room, int userID, String nickname, String message) {
 		String payload = String.format(Locale.getDefault(), 
 				"%s%s%s%s%s%s%d", 
@@ -40,6 +65,12 @@ public class MessageFactory {
 		return new Message(MessageType.MESSAGE, payload);
 	}
 	
+	/**
+	 * Make a PingStudent message 
+	 * @param room Room to which Ping will be sent
+	 * @param userID User's ID
+	 * @return
+	 */
 	public static Message makePingStudentMessage(String room, int userID) {
 		String payload = String.format(Locale.getDefault(), 
 				"%s%s%d",
@@ -50,6 +81,11 @@ public class MessageFactory {
 		return new Message(MessageType.PINGSTUDENT, payload);
 	}
 
+	/**
+	 * Converts the message received from mKliker server to {@link Message} object
+	 * @param payload Payload received via WebSocket connection
+	 * @return
+	 */
 	public static Message fromWSString(String payload) {
 		String[] payloads = payload.split(Message.SEPARATOR);
 		MessageType messageType = MessageTypeUtil.stringToMessageType(payloads[0]);

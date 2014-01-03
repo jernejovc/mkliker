@@ -19,6 +19,12 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * Database for storing data used to store server data.
+ * @author matej
+ * @deprecated SharedPreferences used instead.
+ *
+ */
 public class KlikerDatabase extends SQLiteOpenHelper
 {
 	private final Context myContext;
