@@ -1,0 +1,49 @@
+<resources>
+
+    <string name="action_settings">Nastavitve</string>
+    <string name="app_name">mKliker</string>
+    <string name="dialog_cancel">Prekliči</string>
+    <string name="dialog_delete">Izbriši</string>
+    <string name="dialog_disconnect_server_message">Resnično želite prekiniti povezavo s strežnikom?</string>
+    <string name="dialog_disconnect_server_title">Prekini povezavo</string>
+    <string name="dialog_enable_sms_message">Niste povezani na WiFi ali mobilni prenos podatkov, vseeno pa lahko vključite sodelovanje preko sporočil SMS (če strežnik, na katerega se povezujete, to podpira).</string>
+    <string name="dialog_enable_sms_title">Vključite SMS</string>
+    <string name="dialog_exit_room_message">Resnično želite zapustiti sobo?</string>
+    <string name="dialog_exit_room_title">Izhod iz sobe</string>
+    <string name="dialog_ok">V redu</string>
+    <string name="dialog_sms_participation">Sodelovanje preko SMS</string>
+    <string name="dialog_sms_participation_message">Sodelujete prek sporočil SMS. To pomeni, da se vprašanja ne bodo osveževala, prav tako pa boste morali ročno vpisovati odgovore (npr. \'A\', \'ACE\', \'Odgovor\') in jih pošiljati ročno ko profesor zastavi vprašanje.</string>
+    <string name="dialog_url">Povezava (URL)</string>
+    <string name="dialogaddserver_default">Privzet</string>
+    <string name="dialogaddserver_enter_name_hint">Vnesite ime strežnika</string>
+    <string name="dialogaddserver_enter_server_url_hint">Vnesite povezavo (URL) strežnika</string>
+    <string name="dialogaddserver_name">Ime</string>
+    <string name="dialogaddserver_sms_number">SMS številka (opcijsko)</string>
+    <string name="menu_enable_sms">Omogoči SMS</string>
+    <string name="roomfragment_abcde">Izberite en odgovor A, B, C, D ali E</string>
+    <string name="roomfragment_abcde_multi">Izberite enega ali več odgovorom A, B, C, D, E ter pritisnite \'Pošlji odgovor\'</string>
+    <string name="roomfragment_answer">Odgovor:</string>
+    <string name="roomfragment_connected_as">" z vzdevkom"</string>
+    <string name="roomfragment_connected_to">"Vpisani v sobo "</string>
+    <string name="roomfragment_dont_know">Ne vem</string>
+    <string name="roomfragment_no">Ne</string>
+    <string name="roomfragment_no_question">Vprašanje ne teče.</string>
+    <string name="roomfragment_no_question_running">Vprašanje ne teče.</string>
+    <string name="roomfragment_send">Pošlji</string>
+    <string name="roomfragment_send_answer">Pošlji odgovor</string>
+    <string name="roomfragment_send_message_lecturer">Pošljite sporočilo predavatelju:</string>
+    <string name="roomfragment_shortanswer">Vpišite odgovor ter pritisnite \'Pošlji odgovor\'</string>
+    <string name="roomfragment_yes">Da</string>
+    <string name="roomfragment_yes_no_dontknow">Pritisnite Da, Ne ali Ne vem.</string>
+    <string name="select_room_enter_room">Vnesite ime sobe.</string>
+    <string name="selectroom_enter_nickname">Vnesite vzdevek.</string>
+    <string name="selectroom_room_doesnt_exist">Ta soba ne obstaja.</string>
+    <string name="selectroomfragment_join">Pridruži se sobi</string>
+    <string name="selectroomfragment_nickname">Vzdevek</string>
+    <string name="selectroomfragment_room">Soba</string>
+    <string name="startfragment_connect">Poveži se</string>
+    <string name="startfragment_welcome">Dobrodošli v mKliker!</string>
+    <string name="dialog_sure_want_enable_sms">Resnično želite omogočiti SMS?</string>
+    <string name="dialog_sure_want_enable_sms_message">Ali resnično želite omogočiti sodelovanje preko SMS? Glede na vašo naročnino boste lahko imeli dodatne stroške.</string>
+
+</resources>

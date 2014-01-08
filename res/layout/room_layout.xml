@@ -14,8 +14,9 @@
             android:id="@+id/roomConnectedTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connected to "
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="@string/roomfragment_connected_to"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/text_color" />
 
         <TextView
             android:id="@+id/roomRoomTextView"
@@ -28,7 +29,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" as "
+            android:text="@string/roomfragment_connected_as"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -45,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:text="No question running."
+        android:text="@string/roomfragment_no_question_running"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -56,24 +57,27 @@
 
         <Button
             android:id="@+id/roomYesButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Yes" />
+            android:text="@string/roomfragment_yes" />
 
         <Button
             android:id="@+id/roomNoButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="No" />
+            android:text="@string/roomfragment_no" />
 
         <Button
             android:id="@+id/roomDontKnowButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Don&apos;t know" />
+            android:text="@string/roomfragment_dont_know" />
     </LinearLayout>
 
     <LinearLayout
@@ -84,30 +88,35 @@
 
         <Button
             android:id="@+id/roomAButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="A" />
 
         <Button
             android:id="@+id/roomBButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="B" />
 
         <Button
             android:id="@+id/roomCButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="C" />
 
         <Button
             android:id="@+id/roomDButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="D" />
 
         <Button
             android:id="@+id/roomEButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="E" />
@@ -163,7 +172,6 @@
                 android:layout_weight="1"
                 android:text="E" />
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -177,33 +185,33 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Answer: "
+            android:text="@string/roomfragment_answer"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="visible" />
 
         <EditText
             android:id="@+id/roomAnswerEditText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:visibility="visible" />
-
     </LinearLayout>
 
     <Button
         android:id="@+id/roomSendAnswerButton"
+        style="@style/style_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Send answer"
+        android:text="@string/roomfragment_send_answer"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send a message to the lecturer:"
+        android:text="@string/roomfragment_send_message_lecturer"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
@@ -217,17 +225,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:ems="10" >
+            android:ems="10"
+            android:inputType="text" >
 
             <requestFocus />
         </EditText>
 
         <Button
             android:id="@+id/roomSendMessageButton"
+            style="@style/style_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Send" />
+            android:text="@string/roomfragment_send" />
     </LinearLayout>
 
 </LinearLayout>

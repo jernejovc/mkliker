@@ -1,8 +1,6 @@
 package com.jernejovc.mkliker;
 
 import java.util.Locale;
-
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.SmsManager;
@@ -14,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.jernejovc.mkliker.message.Message;
 import com.jernejovc.mkliker.message.MessageFactory;
 import com.jernejovc.mkliker.net.ReceiveMessage;
@@ -172,14 +169,7 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 		if(m_activity.inSMSMode()) {
 			m_textanswerLayout.setVisibility(View.GONE);
 			m_sendAnswerButton.setVisibility(View.GONE);
-			AlertDialog.Builder adb = new AlertDialog.Builder(m_activity);
-			adb.setTitle("Participation via SMS");
-			adb.setIcon(android.R.drawable.ic_dialog_alert);
-			adb.setMessage("You are participating by SMS. That means that this screen will not " + 
-			"update and you will have to write your answers (e.g. 'A', 'ADE' and 'answer') and send them " + 
-					"manually when your lecturer starts the question.");
-			adb.setPositiveButton("OK", null);
-			adb.show();
+			m_activity.showSMSParticipationDialog();
 		}
 		
 		// Enable or disable question
@@ -276,27 +266,27 @@ public class RoomFragment extends Fragment implements ReceiveMessage {
 			// show question layouts based on question type, also show some informative text
 			switch(m_questionType) {
 			case YESNO:
-				m_roomStatusTextView.setText("Tap Yes, No or Don't know.");
+				m_roomStatusTextView.setText(R.string.roomfragment_yes_no_dontknow);
 				m_yesnoLayout.setVisibility(View.VISIBLE);
 				break;
 			case ABCDESINGLE:
-				m_roomStatusTextView.setText("Tap one of A, B, C, D or E.");
+				m_roomStatusTextView.setText(R.string.roomfragment_abcde);
 				m_abcdeSingleLayout.setVisibility(View.VISIBLE);
 				break;
 			case ABCDEMULTI:
-				m_roomStatusTextView.setText("Select one or more from A, B, C, D or E and tap send answer.");
+				m_roomStatusTextView.setText(R.string.roomfragment_abcde_multi);
 				m_abcdeMultiLayout.setVisibility(View.VISIBLE);
 				m_sendAnswerButton.setVisibility(View.VISIBLE);
 				break;
 			case SHORTANSWER:
-				m_roomStatusTextView.setText("Type your answer and tap send answer.");
+				m_roomStatusTextView.setText(R.string.roomfragment_shortanswer);
 				m_textanswerLayout.setVisibility(View.VISIBLE);
 				m_sendAnswerButton.setVisibility(View.VISIBLE);
 				break;
 			}
 		} else {
 			// Hide all layouts
-			m_roomStatusTextView.setText("No question running.");
+			m_roomStatusTextView.setText(R.string.roomfragment_no_question);
 
 			m_yesnoLayout.setVisibility(View.GONE);
 

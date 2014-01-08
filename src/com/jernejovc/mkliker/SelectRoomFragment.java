@@ -8,7 +8,6 @@ import com.jernejovc.mkliker.net.User;
 import com.jernejovc.mkliker.question.QuestionType;
 import com.jernejovc.mkliker.question.QuestionTypeUtil;
 import com.jernejovc.mkliker.util.KlikerPreferences;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +60,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		String room = m_roomEditText.getText().toString();
 		if(room == "") {
 			Toast.makeText(getActivity(),
-					"Enter room name!", Toast.LENGTH_LONG).show();
+					R.string.select_room_enter_room, Toast.LENGTH_LONG).show();
 			m_roomEditText.requestFocus();
 			return;
 		}
@@ -69,7 +68,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 		String nickname = m_nicknameEditText.getText().toString();
 		if(nickname == "") {
 			Toast.makeText(getActivity(),
-					"Enter your nickname!", Toast.LENGTH_LONG).show();
+					R.string.selectroom_enter_nickname, Toast.LENGTH_LONG).show();
 			m_nicknameEditText.requestFocus();
 			return;
 		}
@@ -135,7 +134,7 @@ public class SelectRoomFragment extends Fragment implements ReceiveMessage {
 				break;
 			case NOSUCHROOM:
 				// No such room exists
-				Toast.makeText(getActivity(), "This room doesn't exist!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), R.string.selectroom_room_doesnt_exist, Toast.LENGTH_LONG).show();
 				m_roomEditText.requestFocus();
 				m_progressBar.setVisibility(View.GONE);
 				m_joinRoomButton.setVisibility(View.VISIBLE);

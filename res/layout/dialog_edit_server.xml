@@ -9,7 +9,7 @@
         android:id="@+id/roomConnectedTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="@string/dialogaddserver_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Enter name of the server"
+        android:hint="@string/dialogaddserver_enter_name_hint"
         android:inputType="text" >
 
         <requestFocus />
@@ -27,7 +27,7 @@
         android:id="@+id/connectErrorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="URL"
+        android:text="@string/dialog_url"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -35,14 +35,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Enter server URL"
+        android:hint="@string/dialogaddserver_enter_server_url_hint"
         android:inputType="textUri" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SMS Number (optional)"
+        android:text="@string/dialogaddserver_sms_number"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -56,7 +56,7 @@
         android:id="@+id/editServerDialogDefaultCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Default" />
+        android:text="@string/dialogaddserver_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,21 +68,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="OK" />
+            android:text="@string/dialog_ok" />
 
         <Button
             android:id="@+id/editServerDialogCancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/dialog_cancel" />
 
         <Button
             android:id="@+id/editServerDialogDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delete" />
+            android:text="@string/dialog_delete" />
 
     </LinearLayout>
 

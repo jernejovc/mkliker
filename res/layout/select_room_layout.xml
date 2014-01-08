@@ -9,7 +9,7 @@
         android:id="@+id/roomConnectedTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Room"
+        android:text="@string/selectroomfragment_room"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -26,7 +26,7 @@
         android:id="@+id/roomRoomTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nickname"
+        android:text="@string/selectroomfragment_nickname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -38,9 +38,10 @@
 
     <Button
         android:id="@+id/selectRoomJoinButton"
+        style="@style/style_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join" />
+        android:text="@string/selectroomfragment_join" />
 
     <ProgressBar
         android:id="@+id/selectRoomProgressBar"

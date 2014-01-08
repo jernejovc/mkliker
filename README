@@ -1,0 +1,3 @@
+Izvorno kodo najlaže prevedete s pomočjo orodja Eclipse z naloženimi Android razširitvami (http://developer.android.com/sdk/installing/installing-adt.html). 
+Vsebino arhiva najprej razširite na poljubno lokacijo. V orodju Eclipse nato izberete File → Import... → Android → Existing Android Code Into Workspace. V dialogu, ki se prikaže, poiščete mesto kamor ste arhiv razširili ter izberete projekt mKliker.
+Ko je projekt uvožen, ga poženete (CTRL + R) ter izberete Android napravo, na kateri se bo aplikacija pognala.

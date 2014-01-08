@@ -1,7 +1,6 @@
 package com.jernejovc.mkliker;
 
 import com.jernejovc.mkliker.util.KlikerPreferences;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 /**
  * Main Activity which is started when the app is ran.
@@ -105,40 +103,44 @@ public class MainActivity extends FragmentActivity {
 		// RoomFragment
 		if(getSupportFragmentManager().getBackStackEntryCount() == 2) {
 			AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		    adb.setTitle("Do you want to exit room?");
+		    adb.setTitle(R.string.dialog_exit_room_title);
 		    adb.setIcon(android.R.drawable.ic_dialog_alert);
-		    adb.setMessage("Are you sure you want to leave the room?");
-		    System.out.println("Count: " + getSupportFragmentManager().getBackStackEntryCount());
-		    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) {
-		            Toast.makeText(MainActivity.this, "leave", Toast.LENGTH_SHORT).show();
-		            m_selectRoomFragment.getServer().setReceiver(m_selectRoomFragment);
-		            MainActivity.super.onBackPressed();
-		      } });
-	
-	
-		    adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) {
-		        	Toast.makeText(MainActivity.this, "stay", Toast.LENGTH_SHORT).show();
-		      } });
+		    adb.setMessage(R.string.dialog_exit_room_message);
+		    // Log.d("mKliker", "Count: " + getSupportFragmentManager().getBackStackEntryCount());
+		    
+		    adb.setPositiveButton(getResources().getString(R.string.dialog_ok), 
+		    		new DialogInterface.OnClickListener() {
+		    	public void onClick(DialogInterface dialog, int which) {
+		    		//Toast.makeText(MainActivity.this, "leave", Toast.LENGTH_SHORT).show();
+		    		m_selectRoomFragment.getServer().setReceiver(m_selectRoomFragment);
+		    		MainActivity.super.onBackPressed();
+		    	} });
+
+
+		    adb.setNegativeButton(getResources().getString(R.string.dialog_cancel), 
+		    		new DialogInterface.OnClickListener() {
+		    	public void onClick(DialogInterface dialog, int which) {
+		    		//Toast.makeText(MainActivity.this, "stay", Toast.LENGTH_SHORT).show();
+		    	}});
 		    adb.show();
 		} else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		    adb.setTitle("Disconnect from server?");
+		    adb.setTitle(R.string.dialog_disconnect_server_title);
 		    adb.setIcon(android.R.drawable.ic_dialog_alert);
-		    adb.setMessage("Are you sure you want to disconnect from server?");
+		    adb.setMessage(R.string.dialog_disconnect_server_message);
 		    System.out.println("Count: " + getSupportFragmentManager().getBackStackEntryCount());
-		    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) {
-		            Toast.makeText(MainActivity.this, "disconnect", Toast.LENGTH_SHORT).show();
-		            m_selectRoomFragment.getServer().getConnection().disconnect();
-		            MainActivity.super.onBackPressed();
-		      } });
-	
-	
+		    adb.setPositiveButton(getResources().getString(R.string.dialog_ok), 
+		    		new DialogInterface.OnClickListener() {
+		    	public void onClick(DialogInterface dialog, int which) {
+		    		//Toast.makeText(MainActivity.this, "disconnect", Toast.LENGTH_SHORT).show();
+		    		m_selectRoomFragment.getServer().getConnection().disconnect();
+		    		MainActivity.super.onBackPressed();
+		    	}});
+
+
 		    adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) {
-		        	Toast.makeText(MainActivity.this, "stay", Toast.LENGTH_SHORT).show();
+		        	//Toast.makeText(MainActivity.this, "stay", Toast.LENGTH_SHORT).show();
 		      } });
 		    adb.show();
 		} else {
@@ -220,12 +222,23 @@ public class MainActivity extends FragmentActivity {
 	 * Shows info about SMS usage in the app.
 	 */
 	public void showSMSInfoDialog() {
+		showOKDialog(R.string.dialog_enable_sms_title, 
+				R.string.dialog_enable_sms_message,
+				android.R.drawable.ic_dialog_info);
+	}
+
+	public void showSMSParticipationDialog() {
+		showOKDialog(R.string.dialog_sms_participation,
+				R.string.dialog_sms_participation_message, 
+				android.R.drawable.ic_dialog_alert);
+	}
+	
+	private void showOKDialog(int title, int message, int icon) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setTitle("Enable SMS");
-		adb.setIcon(android.R.drawable.ic_dialog_info);
-		adb.setMessage("You are not connected to a network, however you can " +
-		"enable participation via SMS in the menu (if the server supports SMS participation).");
-		adb.setPositiveButton("OK", null);
+		adb.setTitle(title);
+		adb.setMessage(message);
+		adb.setIcon(icon);
+		adb.setPositiveButton(R.string.dialog_ok, null);
 		adb.show();
 	}
 }

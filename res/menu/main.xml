@@ -4,6 +4,6 @@
         android:id="@+id/action_menu_enable_sms"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Enable SMS" android:checked="false" android:checkable="true" android:visible="true"/>
+        android:title="@string/menu_enable_sms" android:checked="false" android:checkable="true" android:visible="true"/>
 
 </menu>
