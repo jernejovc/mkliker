@@ -58,9 +58,37 @@ public class MainActivity extends FragmentActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.action_menu_enable_sms:
-	        	item.setChecked(!item.isChecked());
-	        	new KlikerPreferences(this).setSMSEnabled(item.isChecked());
-	            return true;
+	        	final boolean checked = item.isChecked();
+	        	if(!checked) {
+	        		final MenuItem fitem = item;
+	        		AlertDialog.Builder adb = new AlertDialog.Builder(this);
+	    		    adb.setTitle(R.string.dialog_sure_want_enable_sms);
+	    		    adb.setIcon(android.R.drawable.ic_dialog_alert);
+	    		    adb.setMessage(R.string.dialog_sure_want_enable_sms_message);
+	    		    adb.setPositiveButton(R.string.dialog_ok, 
+	    		    		new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface arg0,
+										int arg1) {
+									fitem.setChecked(true);
+									new KlikerPreferences(MainActivity.this).setSMSEnabled(true);
+								}
+						});
+	    		    adb.setNegativeButton(R.string.dialog_cancel, 
+	    		    		new DialogInterface.OnClickListener() {
+						
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									fitem.setChecked(false);
+									new KlikerPreferences(MainActivity.this).setSMSEnabled(false);
+								}
+							});
+	    		    adb.show();
+	        	} else {
+	        		item.setChecked(false);
+	        		new KlikerPreferences(this).setSMSEnabled(false);
+	            	return true;
+	        	}
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
